@@ -1,0 +1,112 @@
+name: Mobile Test Automation (BrowserStack)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target test environment
+        required: true
+        default: qa
+        type: choice
+        options:
+          - qa
+          - stage
+      android_device_name:
+        description: BrowserStack Android device name available to your account
+        required: true
+        default: Google Pixel 8
+        type: string
+      android_os_version:
+        description: Android OS version available for the selected device
+        required: true
+        default: "14"
+        type: string
+      ios_device_name:
+        description: BrowserStack iOS device name available to your account
+        required: true
+        default: iPhone 16
+        type: string
+      ios_os_version:
+        description: iOS version available for the selected device
+        required: true
+        default: "18"
+        type: string
+      parallel:
+        description: Run Android and iOS lanes concurrently and enable xdist workers
+        required: true
+        default: false
+        type: boolean
+      workers:
+        description: Concurrent BrowserStack sessions per platform job
+        required: true
+        default: "1"
+        type: choice
+        options:
+          - "1"
+          - "2"
+          - "3"
+
+jobs:
+  browserstack-tests:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    strategy:
+      fail-fast: false
+      max-parallel: ${{ inputs.parallel && 2 || 1 }}
+      matrix:
+        include:
+          - platform: android
+            device_name: ${{ inputs.android_device_name }}
+            os_version: ${{ inputs.android_os_version }}
+            app_secret: BROWSERSTACK_APP_ANDROID
+          - platform: ios
+            device_name: ${{ inputs.ios_device_name }}
+            os_version: ${{ inputs.ios_os_version }}
+            app_secret: BROWSERSTACK_APP_IOS
+    env:
+      RUN_ENV: browserstack
+      TEST_ENVIRONMENT: ${{ inputs.environment }}
+      PLATFORM: ${{ matrix.platform }}
+      QA_BROWSERSTACK_USERNAME: ${{ secrets.QA_BROWSERSTACK_USERNAME }}
+      QA_BROWSERSTACK_ACCESS_KEY: ${{ secrets.QA_BROWSERSTACK_ACCESS_KEY }}
+      STAGE_BROWSERSTACK_USERNAME: ${{ secrets.STAGE_BROWSERSTACK_USERNAME }}
+      STAGE_BROWSERSTACK_ACCESS_KEY: ${{ secrets.STAGE_BROWSERSTACK_ACCESS_KEY }}
+      BROWSERSTACK_APP: ${{ secrets[matrix.app_secret] }}
+      BROWSERSTACK_ANDROID_DEVICE_NAME: ${{ matrix.platform == 'android' && matrix.device_name || '' }}
+      BROWSERSTACK_ANDROID_OS_VERSION: ${{ matrix.platform == 'android' && matrix.os_version || '' }}
+      BROWSERSTACK_IOS_DEVICE_NAME: ${{ matrix.platform == 'ios' && matrix.device_name || '' }}
+      BROWSERSTACK_IOS_OS_VERSION: ${{ matrix.platform == 'ios' && matrix.os_version || '' }}
+      BROWSERSTACK_PARALLEL: ${{ inputs.parallel }}
+      BROWSERSTACK_WORKERS: ${{ inputs.workers }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Load selected environment properties
+        run: python -m mobile_test_automation.config.environment_profile --github-env-file "$GITHUB_ENV"
+
+      - name: Validate BrowserStack settings
+        run: |
+          python -c "import os, sys; platform = os.environ['PLATFORM'].upper(); names = ('BROWSERSTACK_USERNAME', 'BROWSERSTACK_ACCESS_KEY', 'BROWSERSTACK_APP', f'BROWSERSTACK_{platform}_DEVICE_NAME', f'BROWSERSTACK_{platform}_OS_VERSION'); missing = [name for name in names if not os.environ.get(name)]; print('Missing required BrowserStack settings: ' + ', '.join(missing) if missing else 'BrowserStack settings are present.'); sys.exit(bool(missing))"
+
+      - name: Install project dependencies
+        run: python -m pip install .
+
+      - name: Validate iOS selector coverage
+        if: matrix.platform == 'ios'
+        run: |
+          python -c "import json, sys; from pathlib import Path; data = json.loads(Path('mobile_test_automation/resources/locators/locators.json').read_text(encoding='utf-8')); missing = [f'{page}.{key}' for page, locators in data.items() if isinstance(locators, dict) for key, locator in locators.items() if isinstance(locator, dict) and not isinstance(locator.get('xpath', {}).get('ios'), str)]; print('Unconfigured iOS XPath values: ' + ', '.join(missing) if missing else 'iOS XPath coverage is configured.'); sys.exit(bool(missing))"
+
+      - name: Run platform scenarios
+        shell: bash
+        run: |
+          workers=1
+          if [[ "${BROWSERSTACK_PARALLEL}" == "true" ]]; then
+            workers="${BROWSERSTACK_WORKERS}"
+          fi
+          python -m pytest tests/bdd -n "${workers}" --dist load

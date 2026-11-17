@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "dataset_id": "general-store-ai-qa-starter",
+  "synthetic": true,
+  "notice": "Illustrative test data only. Not captured from a real device, customer, or production run.",
+  "requirements": [
+    {
+      "id": "REQ-GS-001",
+      "text": "The shopper can enter a name, choose a country, and open the product list.",
+      "existing_scenario": "Launch, fill form and navigate to products",
+      "source_feature": "tests/bdd/features/general_store.feature",
+      "expected_pages": ["FormPage", "ProductPage"],
+      "expected_locators": ["nameField", "countrySpinner", "countryOption", "letsShopBtn"]
+    },
+    {
+      "id": "REQ-GS-002",
+      "text": "The shopper can add two products to the cart and see a total equal to the sum of item prices.",
+      "existing_scenario": "Add products and verify cart total",
+      "source_feature": "tests/bdd/features/general_store.feature",
+      "expected_pages": ["ProductPage", "CartPage"],
+      "expected_locators": ["productName", "addCartBtn", "cartBtn", "productPrice", "totalAmount"]
+    },
+    {
+      "id": "REQ-GS-003",
+      "text": "The shopper can open and view the Terms and Conditions dialog from the cart.",
+      "existing_scenario": "Long press Terms and validate modal",
+      "source_feature": "tests/bdd/features/general_store.feature",
+      "expected_pages": ["CartPage"],
+      "expected_locators": ["termsBtn", "termsTitle"]
+    }
+  ],
+  "failure_cases": [
+    {
+      "id": "FAIL-SYN-001",
+      "scenario_id": "REQ-GS-001",
+      "platform": "android",
+      "step": "Tap Let's Shop Button",
+      "exception_family": "LookupError",
+      "message": "No visible element found for page=FormPage, key=letsShopBtn, platform=android",
+      "evidence_ids": ["EVID-SYN-001"],
+      "expected_category": "test_or_locator",
+      "expected_needs_review": true
+    },
+    {
+      "id": "FAIL-SYN-002",
+      "scenario_id": "REQ-GS-002",
+      "platform": "android",
+      "step": "Verify cart total",
+      "exception_family": "AssertionError",
+      "message": "Displayed total differs from the sum of visible item prices",
+      "evidence_ids": ["EVID-SYN-002"],
+      "expected_category": "product",
+      "expected_needs_review": true
+    },
+    {
+      "id": "FAIL-SYN-003",
+      "scenario_id": "REQ-GS-001",
+      "platform": "android",
+      "step": "Create Appium session",
+      "exception_family": "ConfigurationError",
+      "message": "Required local app package or activity is not configured",
+      "evidence_ids": ["EVID-SYN-003"],
+      "expected_category": "environment",
+      "expected_needs_review": true
+    },
+    {
+      "id": "FAIL-SYN-004",
+      "scenario_id": "REQ-GS-003",
+      "platform": "ios",
+      "step": "Find Terms button",
+      "exception_family": "LocatorConfigurationError",
+      "message": "XPath for CartPage.termsBtn is not configured for ios",
+      "evidence_ids": ["EVID-SYN-004"],
+      "expected_category": "test_or_locator",
+      "expected_needs_review": true
+    },
+    {
+      "id": "FAIL-SYN-005",
+      "scenario_id": "REQ-GS-002",
+      "platform": "android",
+      "step": "Unknown synthetic step",
+      "exception_family": "RuntimeError",
+      "message": "Synthetic observation has no diagnostic evidence",
+      "evidence_ids": [],
+      "expected_category": "unknown",
+      "expected_needs_review": true
+    }
+  ],
+  "evidence": [
+    {
+      "id": "EVID-SYN-001",
+      "kind": "page_source_summary",
+      "description": "Synthetic hierarchy summary with no matching visible shop button.",
+      "content": "<hierarchy><android.widget.Button resource-id=\"com.androidsample.generalstore:id/btnLetsShop\" text=\"Let's Shop\" displayed=\"false\" /></hierarchy>"
+    },
+    {
+      "id": "EVID-SYN-002",
+      "kind": "assertion_summary",
+      "description": "Synthetic cart assertion observation; it does not assert a real product price or expected total.",
+      "content": "item_price_sum=UNSPECIFIED; displayed_total=UNSPECIFIED"
+    },
+    {
+      "id": "EVID-SYN-003",
+      "kind": "configuration_summary",
+      "description": "Synthetic local-run configuration check.",
+      "content": "APP_PACKAGE=missing; APP_ACTIVITY=missing"
+    },
+    {
+      "id": "EVID-SYN-004",
+      "kind": "locator_catalog_summary",
+      "description": "The checked-in iOS locator values are null pending validation against an iOS app.",
+      "content": "platform=ios; locator=CartPage.termsBtn; configured=false"
+    }
+  ]
+}

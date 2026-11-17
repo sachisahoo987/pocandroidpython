@@ -1,0 +1,143 @@
+{
+  "$schemaVersion": 1,
+  "FormPage": {
+    "nameField": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/nameField']",
+        "ios": null
+      }
+    },
+    "countrySpinner": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/spinnerCountry']",
+        "ios": null
+      }
+    },
+    "countryOption": {
+      "xpath": {
+        "android": "//android.widget.TextView[@text={value}]",
+        "ios": null
+      }
+    },
+    "letsShopBtn": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/btnLetsShop']",
+        "ios": null
+      }
+    },
+    "radioMale": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/radioMale']",
+        "ios": null
+      }
+    },
+    "radioFemale": {
+      "xpath": {
+        "android": "//android.widget.RadioButton[@text='Female']",
+        "ios": null
+      }
+    }
+  },
+  "ProductPage": {
+    "toolbarTitle": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/toolbar_title']",
+        "ios": null
+      }
+    },
+    "productName": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/productName']",
+        "ios": null
+      }
+    },
+    "addCartBtn": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/productAddCart']",
+        "ios": null
+      }
+    },
+    "cartBtn": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/appbar_btn_cart']",
+        "ios": null
+      }
+    },
+    "counterText": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/counterText']",
+        "ios": null
+      }
+    }
+  },
+  "CartPage": {
+    "toolbarTitle": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/toolbar_title']",
+        "ios": null
+      }
+    },
+    "productName": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/productName']",
+        "ios": null
+      }
+    },
+    "productPrice": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/productPrice']",
+        "ios": null
+      }
+    },
+    "totalAmount": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/totalAmountLbl']",
+        "ios": null
+      }
+    },
+    "termsBtn": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/termsButton']",
+        "ios": null
+      }
+    },
+    "termsTitle": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/alertTitle']",
+        "ios": null
+      }
+    },
+    "proceedBtn": {
+      "xpath": {
+        "android": "//*[@resource-id='com.androidsample.generalstore:id/btnProceed']",
+        "ios": null
+      }
+    }
+  },
+  "WebPage": {
+    "searchInput": {
+      "xpath": {
+        "android": "//*[@name='q']",
+        "ios": null
+      }
+    },
+    "angularNavToggle": {
+      "xpath": {
+        "android": "//span[@class='navbar-toggler-icon']",
+        "ios": null
+      }
+    },
+    "angularProductsLink": {
+      "xpath": {
+        "android": "//a[@routerlink='/products']",
+        "ios": null
+      }
+    },
+    "angularDevopsProductLink": {
+      "xpath": {
+        "android": "//a[@href='/angularAppdemo/products/3']",
+        "ios": null
+      }
+    }
+  }
+}

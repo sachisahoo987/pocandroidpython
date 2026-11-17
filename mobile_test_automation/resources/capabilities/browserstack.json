@@ -1,0 +1,28 @@
+{
+  "androidCapabilities": {
+    "platformName": "Android",
+    "appium:automationName": "UiAutomator2",
+    "bstack:options": {
+      "deviceName": "Google Pixel 8",
+      "osVersion": "14",
+      "projectName": "Mobile Test Automation",
+      "buildName": "General Store",
+      "sessionName": "Android",
+      "debug": true,
+      "networkLogs": true
+    }
+  },
+  "iosCapabilities": {
+    "platformName": "iOS",
+    "appium:automationName": "XCUITest",
+    "bstack:options": {
+      "deviceName": "iPhone 16",
+      "osVersion": "18",
+      "projectName": "Mobile Test Automation",
+      "buildName": "General Store",
+      "sessionName": "iOS",
+      "debug": true,
+      "networkLogs": true
+    }
+  }
+}
